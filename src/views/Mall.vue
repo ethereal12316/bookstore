@@ -77,13 +77,32 @@
         </el-table-column>
         <el-table-column prop="stock" label="书籍库存" width="180">
         </el-table-column>
+        <el-table-column>
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              type="danger"
+              size="mini"
+              @click="handleDelete(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
 </template>
 
 <script>
-import { getBookInfo, getBook, addBookInfo } from "../utils/api";
+import {
+  getBookInfo,
+  getBook,
+  addBookInfo,
+  delBookInfo,
+  editBookInfo,
+} from "../utils/api";
 export default {
   name: "bookInfor",
   data() {
@@ -133,6 +152,7 @@ export default {
       },
       modalType: 0,
       total: 0,
+      editBookid: 0,
     };
   },
   methods: {
@@ -172,10 +192,19 @@ export default {
             this.getBookList();
             this.$refs.bookform.resetFields();
           } else {
-            // editUser(this.bookform).then(() => {
-            //   //重新获取列表的接口
-            //   this.getBookList();
-            // });
+            // console.log(this.editBookid);
+            editBookInfo({
+              book_id: this.editBookid,
+              book_name: this.bookform.book_name,
+              price: this.bookform.price,
+              book_variety: this.bookform.book_variety,
+              book_writer: this.bookform.book_writer,
+              stock: this.bookform.stock,
+            }).then(() => {
+              //重新获取列表的接口
+              this.getBookList();
+              this.$refs.bookform.resetFields();
+            });
           }
           //清空表单的数据
           //this.$refs.bookform.resetFields();
@@ -195,14 +224,37 @@ export default {
     cancel() {
       this.handleClose();
     },
-  },
-  watch: {
-    // 监听名为"foo"的数据属性
-    bookform(newVal, oldVal) {
-      // 处理数据变化后的操作
-      console.log("foo属性发生变化了，新值为:", newVal, "旧值为:", oldVal);
-
-      // 可以在这里执行其他操作，例如发送请求、更新其他数据等
+    handleEdit(row) {
+      // console.log(row.book_id);
+      this.modalType = 1;
+      this.dialogVisible = true;
+      // //需要对当前行数据进行深拷贝，否则会出错
+      this.bookform = JSON.parse(JSON.stringify(row));
+      this.editBookid = row.book_id;
+    },
+    handleDelete(row) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          console.log(row.book_id);
+          delBookInfo({ book_id: row.book_id }).then(() => {
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            //重新获取列表的接口
+            this.getBookList();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 

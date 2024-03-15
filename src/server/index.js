@@ -59,6 +59,34 @@ app.post("/addBookInfo", (req, res) => {
       res.status(500).send("数据库连接出错!");
     });
 });
+
+//删除
+app.post("/delBookInfo", (req, res) => {
+  let sql = `delete from book where book_id = '${req.body.params.book_id}'`;
+  console.log(sql);
+  conMysql(sql)
+    .then((result) => {
+      let response = new Response(true, "获取成功", 200, result);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(500).send("数据库连接出错!");
+    });
+});
+
+//查询
+app.post("/editBookInfo", (req, res) => {
+  let sql = `update book set book_name='${req.body.params.book_name}',price='${req.body.params.price}',book_writer='${req.body.params.book_writer}',book_variety='${req.body.params.book_variety}',stock='${req.body.params.stock}' where book_id = '${req.body.params.book_id}' `;
+  console.log(sql);
+  conMysql(sql)
+    .then((result) => {
+      let response = new Response(true, "获取成功", 200, result);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(500).send("数据库连接出错!");
+    });
+});
 //监听node服务器的端口号
 app.listen(3000, () => {
   console.log("恭喜你，服务器启动成功");
