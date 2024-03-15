@@ -3,7 +3,6 @@ const app = express();
 
 const cors = require("cors"); //解决跨域问题
 app.use(cors());
-
 const bodyParser = require("body-parser");
 const multiparty = require("connect-multiparty");
 // 处理 x-www-form-urlencoded
@@ -24,11 +23,6 @@ class Response {
   }
 }
 
-//一个简单的测试接口
-app.get("/test", (req, res) => {
-  res.send("测试用的接口");
-});
-
 //一个简单的接口，查询数据库中的信息
 app.get("/getBook", (req, res) => {
   let sql = "select * from book";
@@ -39,7 +33,23 @@ app.get("/getBook", (req, res) => {
 
 //根据前端传过来的id查询数据库中对应的id的信息
 app.get("/getBookInfo", (req, res) => {
-  let sql = `select * from book where book_name = '${req.query.book_name}'`;
+  let name = "%" + req.query.book_name + "%";
+  let sql = `select * from book where book_name like '${name}'`;
+  conMysql(sql)
+    .then((result) => {
+      console.log(sql);
+      let response = new Response(true, "获取成功", 200, result);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(500).send("数据库连接出错!");
+    });
+});
+
+//新增
+app.post("/addBookInfo", (req, res) => {
+  let sql = `insert into book values('${req.body.params.book_id}','${req.body.params.book_name}','${req.body.params.price}','${req.body.params.book_writer}','${req.body.params.book_variety}','${req.body.params.stock}')`;
+  console.log(sql);
   conMysql(sql)
     .then((result) => {
       let response = new Response(true, "获取成功", 200, result);
