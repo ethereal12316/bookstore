@@ -14,8 +14,8 @@
           <p>上次登陆地点：<span>武汉</span></p>
         </div>
       </el-card>
-      <el-card style="margin-top: 20px; height: 460px">
-        <span>销量前六的图书</span>
+      <el-card style="margin-top: 20px; height: 480px">
+        <h3>销量前十书目榜单</h3>
         <el-table :data="tableData" style="width: 100%">
           <!-- <el-table-column
                         prop="name"
@@ -61,15 +61,18 @@
           </div>
         </el-card>
       </div>
-      <el-card style="height: 280px">
-        <!-- 折线图 -->
-        <div ref="echarts1" style="height: 280px"></div>
+      <el-card style="height: 280px"
+        ><!-- 折线图 -->
+        <h3>半年内不同种类书目销量统计</h3>
+        <div ref="echarts1" style="height: 235px"></div>
       </el-card>
       <div class="graph">
-        <el-card style="height: 260px">
+        <el-card style="height: 280px">
           <div ref="echarts2" style="height: 260px"></div>
         </el-card>
-        <el-card style="height: 260px">
+        <!--饼状图-->
+        <el-card style="height: 280px">
+          <h3>不同种类书目销售额占比</h3>
           <div ref="echarts3" style="height: 230px"></div>
         </el-card>
       </div>
@@ -122,7 +125,7 @@ export default {
         },
       ],
       tableLabel: {
-        name: "书籍种类",
+        name: "课程",
         todayBuy: "今日购买",
         monthBuy: "本月购买",
         totalBuy: "总购买",
@@ -170,33 +173,89 @@ export default {
   mounted() {
     getData().then(({ data }) => {
       const { tableData } = data.data;
+      const { orderData, userData, varietyData } = data.data;
       console.log(data.data);
       this.tableData = tableData;
-      //基于准备好的dom,初始化echarts实例
-      const echarts1 = echarts.init(this.$refs.echarts1);
-      //指定图表的配置项和数据
-      var echarts1Option = {};
-      //处理数据
-      const { orderData, userData, videoData } = data.data;
-      const xAxis = Object.keys(orderData.data[0]);
-      const xAxisData = {
-        data: xAxis,
-      };
-      echarts1Option.xAxis = xAxisData;
-      echarts1Option.yAxis = {};
-      echarts1Option.legend = xAxisData;
-      echarts1Option.series = [];
-      xAxis.forEach((key) => {
-        echarts1Option.series.push({
-          name: key,
-          data: orderData.data.map((item) => item[key]),
-          type: "line",
-        });
-      });
 
-      console.log(echarts1Option);
-      //使用刚指定的配置项和数据显示图表
+      //折线图
+      const echarts1 = echarts.init(this.$refs.echarts1);
+      const echarts1Option = {
+        tooltip: {
+          trigger: "axis",
+        },
+        legend: {
+          data: ["文学", "历史", "哲学", "艺术", "自然科学"],
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true,
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {},
+          },
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: orderData.map((item) => item.date),
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            name: "文学",
+            type: "line",
+            data: orderData.map((item) => item.data1),
+          },
+          {
+            name: "历史",
+            type: "line",
+            data: orderData.map((item) => item.data2),
+          },
+          {
+            name: "哲学",
+            type: "line",
+            data: orderData.map((item) => item.data3),
+          },
+          {
+            name: "艺术",
+            type: "line",
+            data: orderData.map((item) => item.data4),
+          },
+          {
+            name: "自然科学",
+            type: "line",
+            data: orderData.map((item) => item.data5),
+          },
+        ],
+      };
       echarts1.setOption(echarts1Option);
+      //指定图表的配置项和数据
+      /*var echarts1Option = {}
+      //处理数据
+
+      /*const xAxis=Object.keys(orderData.data[0])
+      const xAxisData = {
+        data:xAxis
+      }
+      echarts1Option.xAxis = xAxisData
+      echarts1Option.yAxis = {}
+      echarts1Option.legend = xAxisData
+      echarts1Option.series = []
+      xAxis.forEach(key =>{
+        echarts1Option.series.push({
+          name:key,
+          data:orderData.data.map(item =>item[key]),
+          type:'line'
+        })
+      })
+      console.log(echarts1Option)
+      //使用刚指定的配置项和数据显示图表
+      echarts1.setOption(echarts1Option)*/
 
       //柱状图
       const echarts2 = echarts.init(this.$refs.echarts2);
@@ -270,7 +329,7 @@ export default {
         ],
         series: [
           {
-            data: videoData,
+            data: varietyData,
             type: "pie",
           },
         ],

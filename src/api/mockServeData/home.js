@@ -21,31 +21,26 @@ export default {
     return {
       code: 20000,
       data: {
-        // 饼图
-        videoData: [
+        varietyData: [
           {
-            name: "小米",
-            value: 2999,
+            name: "历史",
+            value: 32034,
           },
           {
-            name: "苹果",
-            value: 5999,
+            name: "哲学",
+            value: 29397,
           },
           {
-            name: "vivo",
-            value: 1500,
+            name: "艺术",
+            value: 14360,
           },
           {
-            name: "oppo",
-            value: 1999,
+            name: "文学",
+            value: 91292,
           },
           {
-            name: "魅族",
-            value: 2200,
-          },
-          {
-            name: "三星",
-            value: 4500,
+            name: "自然科学",
+            value: 13499,
           },
         ],
         // 柱状图
@@ -87,18 +82,61 @@ export default {
           },
         ],
         // 折线图
-        orderData: {
-          date: [
-            "20191001",
-            "20191002",
-            "20191003",
-            "20191004",
-            "20191005",
-            "20191006",
-            "20191007",
-          ],
-          data: List,
-        },
+        orderData: [
+          {
+            date: "2023-09",
+            data1: 160,
+            data2: 54,
+            data3: 162,
+            data4: 0,
+            data5: 54,
+            //33
+          },
+          {
+            date: "2023-10",
+            data1: 234,
+            data2: 42,
+            data3: 69,
+            data4: 0,
+            data5: 17,
+            //40
+          },
+          {
+            date: "2023-11",
+            data1: 347,
+            data2: 0,
+            data3: 91,
+            data4: 53,
+            data5: 0,
+            //47
+          },
+          {
+            date: "2023-12",
+            data1: 181,
+            data2: 50,
+            data3: 0,
+            data4: 69,
+            data5: 79,
+            //42,
+          },
+          {
+            date: "2024-01",
+            data1: 232,
+            data2: 106,
+            data3: 0,
+            data4: 68,
+            data5: 21,
+          },
+          {
+            date: "2024-02",
+            data1: 538,
+            data2: 251,
+            data3: 131,
+            data4: 81,
+            data5: 25,
+            //1400
+          },
+        ],
         tableData: [
           {
             name: "《理想国》",
