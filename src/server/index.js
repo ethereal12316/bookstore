@@ -31,10 +31,30 @@ app.get("/getBook", (req, res) => {
   });
 });
 
+app.get("/getOrder", (req, res) => {
+  let sql = "select * from orders";
+  conMysql(sql).then((result) => {
+    res.send(result);
+  });
+});
+
 //根据前端传过来的id查询数据库中对应的id的信息
 app.get("/getBookInfo", (req, res) => {
   let name = "%" + req.query.book_name + "%";
   let sql = `select * from book where book_name like '${name}'`;
+  conMysql(sql)
+    .then((result) => {
+      console.log(sql);
+      let response = new Response(true, "获取成功", 200, result);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(500).send("数据库连接出错!");
+    });
+});
+
+app.get("/getOrderInfo", (req, res) => {
+  let sql = `select * from orders where orderid = '${req.query.orderid}'`;
   conMysql(sql)
     .then((result) => {
       console.log(sql);
@@ -74,9 +94,35 @@ app.post("/delBookInfo", (req, res) => {
     });
 });
 
+app.post("/delOrderInfo", (req, res) => {
+  let sql = `delete from orders where orderid = '${req.body.params.orderid}'`;
+  console.log(sql);
+  conMysql(sql)
+    .then((result) => {
+      let response = new Response(true, "获取成功", 200, result);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(500).send("数据库连接出错!");
+    });
+});
+
 //查询
 app.post("/editBookInfo", (req, res) => {
   let sql = `update book set book_name='${req.body.params.book_name}',price='${req.body.params.price}',book_writer='${req.body.params.book_writer}',book_variety='${req.body.params.book_variety}',stock='${req.body.params.stock}' where book_id = '${req.body.params.book_id}' `;
+  console.log(sql);
+  conMysql(sql)
+    .then((result) => {
+      let response = new Response(true, "获取成功", 200, result);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(500).send("数据库连接出错!");
+    });
+});
+
+app.post("/editOrderInfo", (req, res) => {
+  let sql = `update orders set book_name='${req.body.book_name}',number='${req.body.params.number}',date='${req.body.params.date}',where orderid = '${req.body.params.orderid}' `;
   console.log(sql);
   conMysql(sql)
     .then((result) => {

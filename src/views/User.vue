@@ -1,80 +1,19 @@
 <template>
   <div class="manage">
-    <el-dialog
-      title="提示"
-      :visible.sync="dialogVisible"
-      width="50%"
-      :before-close="handleClose"
-    >
-      <!-- 用户的表单信息 -->
-      <el-form
-        ref="form"
-        :rules="rules"
-        :inline="true"
-        :model="form"
-        label-width="80px"
-      >
-        <el-form-item label="姓名" prop="name">
-          <el-input placeholder="请输入姓名" v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input placeholder="请输入年龄" v-model="form.age"></el-input>
-        </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-select v-model="form.sex" placeholder="请选择性别">
-            <el-option label="男" :value="1"></el-option>
-            <el-option label="女" :value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="出生日期" prop="birth">
-          <el-date-picker
-            v-model="form.birth"
-            type="date"
-            placeholder="选择日期"
-            value-format="yyyy-MM-DD"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="地址" prop="addr">
-          <el-input placeholder="请输入地址" v-model="form.addr"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
-      </span>
-    </el-dialog>
-    <div class="manage-header">
-      <el-button @click="handleAdd()" type="primary"> +新增 </el-button>
-      <!-- form搜索区域 -->
-      <el-form :inline="true" :model="userForm">
-        <el-form-item>
-          <el-input placeholder="请输入名称" v-model="userForm.name"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <input v-model="orders" placeholder="输入订单编号查询订单信息" />
+    <button @click="getOrder">查询</button>
     <div class="common-table">
       <el-table stripe height="90%" :data="tableData" style="width: 100%">
-        <el-table-column prop="name" label="姓名"> </el-table-column>
-        <el-table-column prop="sex" label="性别">
-          <template slot-scope="scope">
-            <span style="margin-left: 10px">{{
-              scope.row.sex == 1 ? "男" : "女"
-            }}</span>
-          </template>
+        <el-table-column prop="orderid" label="订单号"> </el-table-column>
+        <el-table-column prop="book_name" label="书籍名称"> </el-table-column>
+        <el-table-column prop="number" label="购买数量"> </el-table-column>
+        <el-table-column prop="date" label="购买日期" :formatter="formatDate">
         </el-table-column>
-        <el-table-column prop="age" label="年龄"> </el-table-column>
-        <el-table-column prop="birth" label="出生日期"> </el-table-column>
-        <el-table-column prop="addr" label="地址"> </el-table-column>
-        <el-table-column prop="sex" label="性别">
+        <el-table-column>
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.row)"
+            <!--<el-button size="mini" @click="handleEdit(scope.row)"
               >编辑</el-button
-            >
+            >-->
             <el-button
               type="danger"
               size="mini"
@@ -84,103 +23,92 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="pager">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="total"
-          @current-change="handlePage"
-        >
-        </el-pagination>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getUser, addUser, editUser, delUser } from "../api";
+import {
+  getOrderInfo,
+  getOrder,
+  delOrderInfo,
+  editOrderInfo,
+} from "../utils/api";
+/*import moment from 'moment'
+import Vue from "vue";
+Vue.filter('dateFormat', function (dateStr,pattern = "YYYY-MM-DD") {
+  return moment(dateStr).format(pattern);
+})*/
 export default {
+  name: "orderInfor",
   data() {
     return {
+      orderInfo: "",
+      orders: "",
       dialogVisible: false,
-      form: {
-        name: "",
-        age: "",
-        sex: "",
-        birth: "",
-        addr: "",
-      },
-      rules: {
-        name: [
-          {
-            required: true,
-            message: "请输入姓名",
-          },
-        ],
-        age: [
-          {
-            required: true,
-            message: "请输入年龄",
-          },
-        ],
-        sex: [
-          {
-            required: true,
-            message: "请选择性别",
-          },
-        ],
-        birth: [
-          {
-            required: true,
-            message: "请选择出生日期",
-          },
-        ],
-        addr: [
-          {
-            required: true,
-            message: "请输入地址",
-          },
-        ],
+      orderform: {
+        orderid: "",
+        book_name: "",
+        number: "",
+        date: "",
       },
       tableData: [],
       modalType: 0, //0表示新增的弹窗，1表示编辑
       total: 0, // 当前总条数
-      pageData: {
-        page: 1,
-        limit: 10,
-      },
-      userForm: {
-        name: "",
-      },
+      editOrderid: 0,
     };
   },
   methods: {
-    //提交用户表单
+    async getOrder() {
+      let res = await getOrderInfo({ orderid: this.orders });
+      console.log(res, "/api", "查询的订单信息");
+      this.orderInfo = res.data;
+      this.tableData = res.data.data;
+    },
+    async getOrderList() {
+      let res = await getOrder();
+      console.log(res, "/api", "获取的订单信息");
+      this.tableData = res.data;
+      this.total = this.tableData.length;
+    },
     submit() {
-      this.$refs.form.validate((valid) => {
+      this.$refs.orderform.validate((valid) => {
         console.log(valid);
         if (valid) {
           //后续对表单数据的处理
           if (this.modalType === 0) {
-            addUser(this.form).then(() => {
-              //重新获取列表的接口
-              this.getList();
-            });
+            this.getOrderList();
+            this.$refs.orderform.resetFields();
           } else {
-            editUser(this.form).then(() => {
+            // console.log(this.editBookid);
+            editOrderInfo({
+              orderid: this.editOrderid,
+              book_name: this.orderform.book_name,
+              number: this.orderform.number,
+              date: this.orderform.date,
+            }).then(() => {
               //重新获取列表的接口
-              this.getList();
+              this.getOrderList();
+              this.$refs.orderform.resetFields();
             });
           }
-          //清空表单的数据
-          this.$refs.form.resetFields();
-          //关闭弹窗
           this.dialogVisible = false;
         }
       });
     },
+    formatDate(row, column) {
+      // 获取单元格数据
+      let data = row[column.property];
+      if (data == null) {
+        return null;
+      }
+      let dt = new Date(data);
+      return dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+    },
+
     //弹窗关闭的时候
     handleClose() {
-      this.$refs.form.resetFields();
+      this.$refs.orderform.resetFields();
       this.dialogVisible = false;
     },
     handleAdd() {
@@ -194,7 +122,8 @@ export default {
       this.modalType = 1;
       this.dialogVisible = true;
       //需要对当前行数据进行深拷贝，否则会出错
-      this.form = JSON.parse(JSON.stringify(row));
+      this.orderform = JSON.parse(JSON.stringify(row));
+      this.editOrderid = row.orderid;
     },
     handleDelete(row) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -203,13 +132,14 @@ export default {
         type: "warning",
       })
         .then(() => {
-          delUser({ id: row.id }).then(() => {
+          console.log(row.orderid);
+          delOrderInfo({ orderid: row.orderid }).then(() => {
             this.$message({
               type: "success",
               message: "删除成功!",
             });
             //重新获取列表的接口
-            this.getList();
+            this.getOrderList();
           });
         })
         .catch(() => {
@@ -218,16 +148,6 @@ export default {
             message: "已取消删除",
           });
         });
-    },
-    getList() {
-      //获取列表的数据
-      getUser({ params: { ...this.userForm, ...this.pageData } }).then(
-        (res) => {
-          console.log(res);
-          this.tableData = res.data.list;
-          this.total = res.data.list ? res.data.count : 0;
-        }
-      );
     },
     //选择页码的回调函数
     handlePage(val) {
@@ -241,7 +161,7 @@ export default {
     },
   },
   mounted() {
-    this.getList();
+    this.getOrderList();
   },
 };
 </script>

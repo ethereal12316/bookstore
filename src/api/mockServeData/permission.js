@@ -19,14 +19,14 @@ export default {
             {
               path: "/mall",
               name: "mall",
-              label: "商品管理",
+              label: "书籍管理",
               icon: "video-play",
               url: "Mall.vue",
             },
             {
               path: "/user",
               name: "user",
-              label: "用户管理",
+              label: "订单管理",
               icon: "user",
               url: "User.vue",
             },
