@@ -88,47 +88,55 @@ export default {
         ],
         // 折线图
         orderData: {
-            date: ['20191001', '20191002', '20191003', '20191004', '20191005', '20191006', '20191007'],
-            data: List
+          date: [
+            "20191001",
+            "20191002",
+            "20191003",
+            "20191004",
+            "20191005",
+            "20191006",
+            "20191007",
+          ],
+          data: List,
+        },
+        tableData: [
+          {
+            name: "《理想国》",
+            todayBuy: "哲学",
+            monthBuy: 277,
+            totalBuy: 12465,
           },
-          tableData: [
-            {
-              name: 'oppo',
-              todayBuy: 500,
-              monthBuy: 3500,
-              totalBuy: 22000
-            },
-            {
-              name: 'vivo',
-              todayBuy: 300,
-              monthBuy: 2200,
-              totalBuy: 24000
-            },
-            {
-              name: '苹果',
-              todayBuy: 800,
-              monthBuy: 4500,
-              totalBuy: 65000
-            },
-            {
-              name: '小米',
-              todayBuy: 1200,
-              monthBuy: 6500,
-              totalBuy: 45000
-            },
-            {
-              name: '三星',
-              todayBuy: 300,
-              monthBuy: 2000,
-              totalBuy: 34000
-            },
-            {
-              name: '魅族',
-              todayBuy: 350,
-              monthBuy: 3000,
-              totalBuy: 22000
-            }
-          ]
+          {
+            name: "《战争的艺术》",
+            todayBuy: "历史",
+            monthBuy: 213,
+            totalBuy: 7029,
+          },
+          {
+            name: "《神曲》",
+            todayBuy: "文学",
+            monthBuy: 211,
+            totalBuy: 11605,
+          },
+          {
+            name: "《达·芬奇密码》",
+            todayBuy: "艺术",
+            monthBuy: 210,
+            totalBuy: 7980,
+          },
+          {
+            name: "《浮士德》",
+            todayBuy: "文学",
+            monthBuy: 180,
+            totalBuy: 6300,
+          },
+          {
+            name: "《基督山伯爵》",
+            todayBuy: "文学",
+            monthBuy: 164,
+            totalBuy: 7708,
+          },
+        ],
       },
     };
   },
