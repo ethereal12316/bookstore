@@ -341,6 +341,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+ /** 普通指针样式**/
+body {
+    padding: 0;
+    margin: 0;
+    cursor: url(../assets/images/neon-dolphin-cursor.png), default;
+}
+/** 链接指针样式**/
+    h3,div,p, span, a:hover{
+    cursor:url(../assets/images/neon-dolphin-pointer.png), pointer;
+}
 .user {
   padding-bottom: 20px;
   margin-bottom: 20px;
