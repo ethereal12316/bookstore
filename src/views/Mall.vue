@@ -266,4 +266,40 @@ export default {
 </script>
 
 <style>
+  .green_btn{
+            position: relative;
+            float:inline-end;
+            background-color: rgb(32, 224, 83);
+            border: 2px;
+            border-radius: 1px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 2px;
+            margin-left: 1px;
+            margin-bottom: 1px;
+            color: #ffffff;
+            width: 70px;
+            height:39px;
+            text-align: center;
+            transition-duration: 0.6s;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .green_btn::after{
+            content: '';
+            background:#53f07f;
+            display: block;
+            position: absolute;
+            padding-top: 40px;
+            padding-left: 40px;
+            opacity: 0;
+            transition:all 0.8s;
+        }
+        .green_btn:active::after{
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s;
+        }
 </style>
