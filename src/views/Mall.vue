@@ -61,8 +61,10 @@
       </el-dialog>
     </div>
     <el-button @click="handleAdd()" type="primary"> +新增 </el-button>
-    <input v-model="book" placeholder="输入书名查询书籍信息" />
-    <button @click="getBook">查询</button>
+    <input v-model="book" placeholder="输入书名查询书籍信息" style="float: right;height:35px;margin-left: 1px;padding-bottom: 2px;"/>
+    <button class="green_btn" @click="getBook"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" style="margin-right: 2px;padding-right: 2px;" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg>查询</button>
     <div>
       <el-table :data="tableData" stripe style="width: 100%">
         <el-table-column prop="book_id" label="书籍id" width="180">
