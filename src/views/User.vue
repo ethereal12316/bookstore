@@ -25,6 +25,14 @@
           </template>
         </el-table-column>
       </el-table>
+            <div class="pager">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="total"
+          @current-change="handlePage"
+        >
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
